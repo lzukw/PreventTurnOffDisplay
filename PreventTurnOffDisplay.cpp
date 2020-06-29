@@ -1,5 +1,6 @@
 #include <iostream>
 #include <Windows.h>
+#include <WinUser.h>
 #include <WinBase.h>
 
 
@@ -13,7 +14,7 @@ void printUsageAndExit(int argc, char* argv[])
   cerr << endl;
   cerr << "...'seconds-to-run' indicates the time, this program should run." << endl;
   cerr << "   If no value is given for 'seconds-to-run' a default-value of 3600 is " << endl;
-  cerr << "   assumed(one hour)." << endl;
+  cerr << "   assumed (one hour)." << endl;
   exit(EXIT_FAILURE);
 }
 
@@ -56,6 +57,15 @@ int main(int argc, char* argv[])
   // should run.
   int secondsToWork = processCmdLineArgs(argc, argv);
 
+  // Move the mouse-pointer to coordinates 0,0 (top left corner of screen).
+  BOOL success =   SetCursorPos(0, 0);
+  if (!success)
+  {
+    cerr << "WARNING: could not move mouse-pointer to top-left corner of screen" << endl;
+  }
+
+  // This call "sets the thread execution state". With the following flags, this
+  // prevents the display from blanking and the system from going into sleep-mode.
   EXECUTION_STATE prevoiusExecutionState = 
           SetThreadExecutionState(ES_CONTINUOUS | ES_DISPLAY_REQUIRED | ES_SYSTEM_REQUIRED);
 
